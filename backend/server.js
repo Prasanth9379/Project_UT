@@ -3,21 +3,19 @@ const sql = require("mssql");
 const cors = require("cors");
 
 const app = express();
-app.use(express.json()); // To parse JSON request bodies
-app.use(cors()); // Enable CORS for all routes
+app.use(express.json());
+app.use(cors());
 
-// SQL Server configuration
 const config = {
-    user: "node", // Database username
-    password: "root", // Database password
-    server: "localhost", // Server IP address
-    database: "student", // Database name
+    user: "node",
+    password: "root",
+    server: "localhost",
+    database: "student",
     options: {
-        encrypt: false // Disable encryption
+        encrypt: false
     }
 };
 
-// Connect to SQL Server
 sql.connect(config, err => {
     if (err) {
         throw err;
@@ -25,16 +23,17 @@ sql.connect(config, err => {
     console.log("Connection Successful!");
 });
 
-// Create a new student
 app.post("/students", (req, res) => {
-    const { id, name, mark, city } = req.body;
-    const query = `INSERT INTO studentdetail (id, name, mark, city) VALUES (@id, @name, @mark, @city)`;
+    const { id, name, mark, city, dob } = req.body;
+    console.log('Inserting student:', { id, name, mark, city, dob });
+    const query = `INSERT INTO studentdetail (id, name, mark, city, dob) VALUES (@id, @name, @mark, @city, @dob)`;
 
     new sql.Request()
         .input('id', sql.Int, id)
         .input('name', sql.VarChar, name)
         .input('mark', sql.Int, mark)
         .input('city', sql.VarChar, city)
+        .input('dob', sql.Date, dob ? new Date(dob) : null)
         .query(query, (err, result) => {
             if (err) {
                 console.error("Error executing query:", err);
@@ -44,10 +43,8 @@ app.post("/students", (req, res) => {
         });
 });
 
-// Get all students
 app.get("/students", (req, res) => {
     const query = "SELECT * FROM studentdetail";
-
     new sql.Request().query(query, (err, result) => {
         if (err) {
             console.error("Error executing query:", err);
@@ -57,17 +54,18 @@ app.get("/students", (req, res) => {
     });
 });
 
-// Update a student
 app.put("/students/:id", (req, res) => {
     const { id } = req.params;
-    const { name, mark, city } = req.body;
-    const query = `UPDATE studentdetail SET name = @name, mark = @mark, city = @city WHERE id = @id`;
+    const { name, mark, city, dob } = req.body;
+    console.log('Updating student:', { id, name, mark, city, dob });
+    const query = `UPDATE studentdetail SET name = @name, mark = @mark, city = @city, dob = @dob WHERE id = @id`;
 
     new sql.Request()
         .input('id', sql.Int, id)
         .input('name', sql.VarChar, name)
         .input('mark', sql.Int, mark)
         .input('city', sql.VarChar, city)
+        .input('dob', sql.Date, dob ? new Date(dob) : null)
         .query(query, (err, result) => {
             if (err) {
                 console.error("Error executing query:", err);
@@ -77,7 +75,6 @@ app.put("/students/:id", (req, res) => {
         });
 });
 
-// Delete a student
 app.delete("/students/:id", (req, res) => {
     const { id } = req.params;
     const query = `DELETE FROM studentdetail WHERE id = @id`;
@@ -93,7 +90,6 @@ app.delete("/students/:id", (req, res) => {
         });
 });
 
-// Start the server on port 3000
 app.listen(3000, () => {
     console.log("Listening on port 3000...");
 });

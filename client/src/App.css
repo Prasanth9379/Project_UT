@@ -5,6 +5,7 @@
   margin: 0;
   padding: 0;
   background-color: lightcyan
+
 }
 
 .container{
@@ -14,12 +15,12 @@
 
 h3{
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: 20px;
   text-align: center;
   padding: 30px;
   color: white;
-  background-color:black
+  background-color:cadetblue
 }
 
 .btn{
@@ -65,10 +66,18 @@ h3{
 .input-search button{
   margin-left: 10px;
 }
+.addcolumn{
+  margin: 15px 15px;
+}
 .addcolumn input{
   justify-content: space-around;
   margin-left: 50px;
   margin-bottom: 20px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  outline: none;
+  width: 200px;
+  padding: 5px 5px;
 }
 
 .table{
@@ -84,13 +93,11 @@ h3{
 }
 
 .table th{
-  background-color: rgba(128, 128, 128, 0.795);
+  background-color: rgb(128, 128, 128);
 } 
 
-.table tr:nth-child(even){
-  background-color: rgba(128, 128, 128, 0.795);
+.table tr:hover{
+  background-color:#ddd
 }
 
-.table tr:hover{
-  background-color: #ddd;
-}
+
